@@ -1,0 +1,21 @@
+{
+  "name": "ih",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run prepublish && mocha",
+    "prepublish": "rm -rf ./lib && mkdir lib && babel ./src/index.js -o ./lib/index.js"   
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel": "^5.8.20",
+    "babel-eslint": "^6.0.0",
+    "clone": "^1.0.2",
+    "eslint": "^2.5.3",
+    "expect": "^1.16.0",
+    "mocha": "^2.4.5"
+  },
+  "dependencies": {}
+}
