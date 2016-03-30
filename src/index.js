@@ -8,12 +8,9 @@ function get (obj, path) {
   const keys = Array.isArray(path) ? path : path.split(".");
 
   if (obj == null) return obj;
+  if (keys.length === 1) return obj[keys[0]];
 
-  if (keys.length === 1) {
-    return obj[keys[0]];
-  } else {
-    return get(obj[keys[0]], keys.slice(1));
-  }
+  return get(obj[keys[0]], keys.slice(1));
 }
 
 /**
@@ -24,19 +21,13 @@ function get (obj, path) {
 function set (obj, path, val) {
   const [headKey, ...tailKeys] = Array.isArray(path) ? path : path.split(".");
 
-  if (tailKeys.length === 0) {
-    return {
-      ...obj,
-      [headKey]: val
-    };
-  } else if (obj[headKey]) {
-    return {
-      ...obj,
-      [headKey]: set(obj[headKey], tailKeys, val)
-    };
-  } else {
-    throw new Error("Attempted to set a non-existant deep path.");
-  }
+  if (tailKeys.length === 0) return {...obj, [headKey]: val};
+  if (obj[headKey] == null) throw new Error("Attempted to set a non-existant deep path.");
+
+  return {
+    ...obj,
+    [headKey]: set(obj[headKey], tailKeys, val)
+  };
 }
 
 
@@ -46,42 +37,13 @@ function set (obj, path, val) {
 function setDeep (obj, path, val) {
   const [headKey, ...tailKeys] = Array.isArray(path) ? path : path.split(".");
 
-  if (tailKeys.length === 0) {
-    return {
-      ...obj,
-      [headKey]: val
-    };
-  } else if (obj[headKey]) {
-    return {
-      ...obj,
-      [headKey]: setDeep(obj[headKey], tailKeys, val)
-    };
-  } else {
-    return {
-      ...obj,
-      [headKey]: setDeep({}, tailKeys, val)
-    };
-  }
-}
+  if (tailKeys.length === 0) return {...obj, [headKey]: val};
 
-/**
-* Returns a new object resulting from merging the source object the new one.
-* The path allows you to specify at which level to perform the merge, or if you
-* send the object to merge instead of a path then it will be used to be merged
-* on the root level of the source object. This will perform a deep merge but won't
-* affect those siblings or keys that already existed in the source object, will
-* only override existing keys with the values from the new object.
-*
-*/
-function merge (obj, path, object) {
-  if (isObject(path)) {
-    return {...obj, ...path};
-  } else {
-    const toMerge = buildNestedObject({}, path, object);
-    return {...obj, ...toMerge};
-  }
+  return {
+    ...obj,
+    [headKey]: set((obj[headKey] == null ? {} : obj[headKey]), tailKeys, val)
+  };
 }
-
 
 /**
 * Returns a new object containing all the keys / values from the source object
@@ -112,6 +74,15 @@ function transform (obj, path, fn) {
 function transformDeep (obj, path, fn) {
   const existing = get(obj, path);
   return set(obj, path, fn(existing)); 
+}
+
+
+function merge (obj, path, toMerge) {
+  return transform(obj, path, mergeOp.bind(null, toMerge));
+}
+
+function mergeDeep (obj, path, toMerge) {
+  return transformDeep(obj, path, mergeOp.bind(null, toMerge));
 }
 
 function inc (obj, path, val) {
@@ -147,37 +118,16 @@ function shiftDeep (obj, path, val) {
 }
 
 module.exports = {
-  get, set, setDeep, merge, without, transform, transformDeep,
+  get, set, setDeep, without, transform, transformDeep, merge, mergeDeep,
   inc, incDeep, toggle, toggleDeep, push, pushDeep, shift, shiftDeep
 };
 
 /***
-* Utility functions
+* Operations used in regular and deep modes
 */
 
-/**
-* Private: Take a key patch such as "student.teacher.name" and a value to build
-* the nested structure with that value assigned. Also expects an initial object
-* to use for building the structure.
-* f.i:
-*   buildNestedObject({}, "student.teacher.name", "john") => {student: {teacher: {name: "john"}}}
-*/
-function buildNestedObject (obj, path, value) {
-  const keys = Array.isArray(path) ? path : path.split(".");
-
-  if (keys.length === 1) {
-    obj[keys[0]] = value;
-  } else {
-    const key = keys.shift();
-    obj[key] = buildNestedObject(typeof obj[key] === "undefined" ? {} : obj[key], keys, value);
-  }
-
-  return obj;
-}
-
-function isObject (obj) {
-  const type = typeof obj;
-  return type === 'function' || type === 'object' && !!obj;
+function mergeOp (toMerge, existing = {}) {
+  return {...existing, ...toMerge};
 }
 
 function toggleOp (val) {

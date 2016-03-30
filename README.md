@@ -12,11 +12,12 @@ In all methods that follow, `obj` is the object to be operated on, and `path` is
 - `set(obj, path, val)` - returns a copy of `obj`, with the value at `path` to `val`.
 - `setDeep(obj, path, val)` - like `set`, but will recursively create objects to set a nested value.
 
-- `merge(obj, path, val)` - returns a copy of `obj` with all properties of `obj` at `path` merged with those in `val`.  Values from `val` take precedence.
 - `without(obj, path)` - returns a copy of obj, with the key at `path` removed.
 - `transform(obj, path, fn)` - `get`s a value, calls `fn` on that value, then `set`s the value.
 - `transformDeep(obj, path, fn)` - like `transform`, but using `setDeep`
 
+- `merge(obj, path, val)` - returns a copy of `obj` with all properties of `obj` at `path` merged with those in `val`.  Values from `val` take precedence.
+- `mergeDeep(obj, path, val = 1)` - like `merge`, but using `setDeep`
 - `inc(obj, path, val = 1)` - increments the value at `path` by `val`, or sets to `val` it if it is null.  Throws if it is a non-numerical value.
 - `incDeep(obj, path, val = 1)` - like `inc`, but using `setDeep`
 - `toggle(obj, path)` - negates the value at `path`.
