@@ -19,15 +19,7 @@ function get (obj, path) {
 * Nested paths, either as a dot-separated string or an array, are valid.
 */
 function set (obj, path, val) {
-  const [headKey, ...tailKeys] = Array.isArray(path) ? path : path.split(".");
-
-  if (tailKeys.length === 0) return {...obj, [headKey]: val};
-  if (obj[headKey] == null) throw new Error("Attempted to set a non-existant deep path.");
-
-  return {
-    ...obj,
-    [headKey]: set(obj[headKey], tailKeys, val)
-  };
+  return setOp(obj, path, val, false);
 }
 
 
@@ -35,14 +27,7 @@ function set (obj, path, val) {
 * Like `set`, but will recursively create objects to set a nested value.
 */
 function setDeep (obj, path, val) {
-  const [headKey, ...tailKeys] = Array.isArray(path) ? path : path.split(".");
-
-  if (tailKeys.length === 0) return {...obj, [headKey]: val};
-
-  return {
-    ...obj,
-    [headKey]: set((obj[headKey] == null ? {} : obj[headKey]), tailKeys, val)
-  };
+  return setOp(obj, path, val, true);
 }
 
 /**
@@ -54,15 +39,24 @@ function without (obj, path) {
 
   if (obj == null) {
     return obj;
-  } else if (tailKeys.length === 0) {
-    const newObj = {...obj};
-    delete newObj[headKey];
-    return newObj;
+  } else if (Array.isArray(obj)) {
+    if (tailKeys.length === 0) {
+      if (isNaN(headKey)) {
+        throw new Error("Attempted to use a non-numerical value as an array key.");
+      } else {
+        return [...obj.slice(0, headKey), ...obj.slice(Number(headKey) + 1)];
+      }
+    } else {
+      return [...obj.slice(0, headKey), without(obj, tailKeys), ...obj.slice(Number(headKey) + 1)];
+    }
   } else {
-    return {
-      ...obj,
-      [headKey]: without(obj, tailKeys)
-    };
+    if (tailKeys.length === 0) {
+      const newObj = {...obj};
+      delete newObj[headKey];
+      return newObj;
+    } else {
+      return { ...obj, [headKey]: without(obj, tailKeys) };
+    }
   }
 }
 
@@ -73,12 +67,16 @@ function transform (obj, path, fn) {
 
 function transformDeep (obj, path, fn) {
   const existing = get(obj, path);
-  return set(obj, path, fn(existing)); 
+  return setDeep(obj, path, fn(existing)); 
 }
 
 
 function merge (obj, path, toMerge) {
-  return transform(obj, path, mergeOp.bind(null, toMerge));
+  if (arguments.length === 2) {
+    return mergeOp(obj, path);
+  } else {
+    return transform(obj, path, mergeOp.bind(null, toMerge));
+  }
 }
 
 function mergeDeep (obj, path, toMerge) {
@@ -125,6 +123,42 @@ module.exports = {
 /***
 * Operations used in regular and deep modes
 */
+
+function setOp (obj, path, val, deep) {
+  const [headKey, ...tailKeys] = Array.isArray(path) ? path : path.split(".");
+
+  let newVal;
+  if (tailKeys.length === 0) {
+    newVal = val;
+  } else {
+    let base = obj[headKey];
+    if (base == null) {
+      if (!deep) {
+        throw new Error("Attempted to set a non-existant deep path.");
+      } else if (isNaN(tailKeys[0])) {
+        base = {};
+      } else {
+        base = [];
+      }
+    }
+    newVal = setOp(base, tailKeys, val, deep);
+  }
+
+  if (!Array.isArray(obj)) {
+    return { ...obj, [headKey]: newVal };
+  }
+
+  if (isNaN(headKey)) {
+    throw new Error("Attempted to use a non-numerical value as an array key.");
+  } else if (headKey > obj.length) {
+    const copy = [...obj];
+    while (headKey > copy.length) copy.push(undefined);
+    copy.push(val);
+    return copy;
+  } else {
+    return [...obj.slice(0, headKey), newVal, ...obj.slice(Number(headKey) + 1)];
+  }
+}
 
 function mergeOp (toMerge, existing = {}) {
   return {...existing, ...toMerge};

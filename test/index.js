@@ -1,4 +1,4 @@
-const ih = require("../lib");
+const ih = require("../src");
 const clone = require("clone");
 const expect = require("expect");
 
@@ -88,22 +88,32 @@ describe("ih", () => {
 
     it("sets a key to a path nested one level", () => {
       copy.c.z = val;
-      expect(ih.set(copy, "c.z", val)).toEqual(copy);
+      expect(ih.set(obj, "c.z", val)).toEqual(copy);
     });
 
     it("overwrites a key to a path nested one level", () => {
       copy.c.d = val;
-      expect(ih.set(copy, "c.d", val)).toEqual(copy);
+      expect(ih.set(obj, "c.d", val)).toEqual(copy);
+    });
+
+    it("sets a key within an array", () => {
+      copy.arr.push(undefined, val);
+      expect(ih.set(obj, "arr.4", val)).toEqual(copy);
+    });
+
+    it("overwrites a key within an array", () => {
+      copy.arr[1] = val;
+      expect(ih.set(obj, "arr.1", val)).toEqual(copy);
     });
 
     it("sets a key to a path nested two levels", () => {
       copy.c.e.z = val;
-      expect(ih.set(copy, "c.e.z", val)).toEqual(copy);
+      expect(ih.set(obj, "c.e.z", val)).toEqual(copy);
     });
 
     it("overwrites a key to a path nested two levels", () => {
       copy.c.e.g = val;
-      expect(ih.set(copy, "c.e.g", val)).toEqual(copy);
+      expect(ih.set(obj, "c.e.g", val)).toEqual(copy);
     });
 
     it("throws if trying to set to a root-level deep path that doesn't exist", () => {
@@ -132,22 +142,32 @@ describe("ih", () => {
 
     it("sets a key to a path nested one level", () => {
       copy.c.z = val;
-      expect(ih.setDeep(copy, "c.z", val)).toEqual(copy);
+      expect(ih.setDeep(obj, "c.z", val)).toEqual(copy);
     });
 
     it("overwrites a key to a path nested one level", () => {
       copy.c.d = val;
-      expect(ih.setDeep(copy, "c.d", val)).toEqual(copy);
+      expect(ih.setDeep(obj, "c.d", val)).toEqual(copy);
+    });
+
+    it("sets a key within an array", () => {
+      copy.arr.push(undefined, val);
+      expect(ih.setDeep(obj, "arr.4", val)).toEqual(copy);
+    });
+
+    it("overwrites a key within an array", () => {
+      copy.arr[1] = val;
+      expect(ih.setDeep(obj, "arr.1", val)).toEqual(copy);
     });
 
     it("sets a key to a path nested two levels", () => {
       copy.c.e.z = val;
-      expect(ih.setDeep(copy, "c.e.z", val)).toEqual(copy);
+      expect(ih.setDeep(obj, "c.e.z", val)).toEqual(copy);
     });
 
     it("overwrites a key to a path nested two levels", () => {
       copy.c.e.g = val;
-      expect(ih.setDeep(copy, "c.e.g", val)).toEqual(copy);
+      expect(ih.setDeep(obj, "c.e.g", val)).toEqual(copy);
     });
 
     it("sets a root-level deep path that doesn't exist", () => {
@@ -158,6 +178,11 @@ describe("ih", () => {
     it("sets a nested deep path that doesn't exist", () => {
       copy.c.a = {z: val};
       expect(ih.setDeep(obj, "c.a.z", val)).toEqual(copy);
+    });
+
+    it("sets a nested deep array path that doesn't exist", () => {
+      copy.c.a = [undefined, val];
+      expect(ih.setDeep(obj, "c.a.1", val)).toEqual(copy);
     });
 
   });
