@@ -1,7 +1,7 @@
 # ih
+Simple immutability helpers for javascript apps.
 
-**Simple immutability helpers for javascript apps.**
-
+## Purpose
 Like using immutable data, but want to work with plain javascript objects?  Use this small set of helpers to manipulate objects in an immutable way.  Each method returns a new object, with the minimal set of changes required to complete the operation.
 
 ## API
