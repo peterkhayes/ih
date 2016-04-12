@@ -99,25 +99,25 @@ function toggleDeep (obj, path) {
   return transformDeep(obj, path, toggleOp);
 }
 
-function push (obj, path, val) {
+function concat (obj, path, val) {
   return transform(obj, path, concatOp.bind(null, val, false));
 }
 
-function pushDeep (obj, path, val) {
+function concatDeep (obj, path, val) {
   return transformDeep(obj, path, concatOp.bind(null, val, false));
 }
 
-function shift (obj, path, val) {
+function concatLeft (obj, path, val) {
   return transform(obj, path, concatOp.bind(null, val, true));
 }
 
-function shiftDeep (obj, path, val) {
+function concatLeftDeep (obj, path, val) {
   return transformDeep(obj, path, concatOp.bind(null, val, true));
 }
 
 module.exports = {
   get, set, setDeep, without, transform, transformDeep, merge, mergeDeep,
-  inc, incDeep, toggle, toggleDeep, push, pushDeep, shift, shiftDeep
+  inc, incDeep, toggle, toggleDeep, concat, concatDeep, concatLeft, concatLeftDeep
 };
 
 /***
@@ -180,12 +180,12 @@ function incOp (amt = 1, existing) {
   }
 }
 
-function concatOp (values, reverse, existing) {
+function concatOp (values, left, existing) {
   values = Array.isArray(values) ? values : [values];
   if (existing == null) {
     return values;
   } else if (Array.isArray(existing)) {
-    if (reverse) {
+    if (left) {
       return values.concat(existing);
     } else {
       return existing.concat(values);

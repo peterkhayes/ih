@@ -20,7 +20,7 @@ In all methods that follow, `obj` is the object to be operated on, and `path` is
 - `incDeep(obj, path, val = 1)` - like `inc`, but using `setDeep`
 - `toggle(obj, path)` - applies the `not` operator to the value at `path`.
 - `toggleDeep(obj, path, val = 1)` - like `toggle`, but using `setDeep`
-- `push(obj, path, val)` - concats `val` to the end of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
-- `pushDeep(obj, path, val = 1)` - like `push`, but using `setDeep`
-- `shift(obj, path, val)` - concats `val` to the beginning of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
-- `shiftDeep(obj, path, val = 1)` - like `shift`, but using `setDeep`
+- `concat(obj, path, val)` - concats `val` to the end of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
+- `concatDeep(obj, path, val = 1)` - like `concat`, but using `setDeep`
+- `concatLeft(obj, path, val)` - concats `val` to the beginning of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
+- `concatLeftDeep(obj, path, val = 1)` - like `concatLeft`, but using `setDeep`
