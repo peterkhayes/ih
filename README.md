@@ -4,22 +4,56 @@ Simple immutability helpers for javascript apps.
 ## Purpose
 Like using immutable data, but want to work with plain javascript objects?  Use this small set of helpers to manipulate objects in an immutable way.  Each method returns a new object, with the minimal set of changes required to complete the operation.
 
+## Usage
+```js
+const ih = require("ih");
+
+const obj = {
+  foo: "bar",
+  a: {
+    b: {
+      c: 4
+    }
+  },
+  arr: [
+    {id: 1},
+    {id: 2}
+  ]
+};
+
+const get1 = ih.get(obj, "a.b.c") // => 4
+const get2 = ih.get(obj, "a.b") // => {c: 4}
+
+const set1 = ih.set(obj, "a", 3) // => new obj with a = 3
+const set2 = ih.set(obj, "a.b.c", 5) // => new obj with a.b.c = 5.  obj.a and obj.a.b are both new objects.
+const set3 = ih.set(obj, "arr.0", {id: 3}) // => new obj with arr[0] = {id: 3}.  arr is a new array, second item is not.
+const set4 = ih.set(obj, "a.e.f", 4) // throws (use setDeep for this)
+
+const transformed = ih.transform(obj, "a.b.c", (x) => x - 1) // => new obj with a.b.c = 3
+const concatted = ih.concat(obj, "arr", [{id: 3}]) // => new obj with a new array with an extra item at arr.
+```
+
 ## API
 
 In all methods that follow, `obj` is the object to be operated on, and `path` is either a string or an array of strings representing the path within an object to be transformed.
 
+#### Basic
 - `get(obj, path)` - returns the value at `path` within `obj`.
 - `set(obj, path, val)` - returns a copy of `obj`, with the value at `path` set to `val`.
 - `setDeep(obj, path, val)` - like `set`, but will recursively create objects to set a nested value.  
 - `without(obj, path)` - returns a copy of obj, with the key at `path` removed.
+
+#### Transformations
 - `transform(obj, path, fn)` - `get`s the value at `path`, calls `fn` on that value, and `set`s the path to the returned value.
 - `transformDeep(obj, path, fn)` - like `transform`, but using `setDeep`
-- `merge(obj, [path,] val)` - returns a copy of `obj` with all properties of `obj` at `path` merged with those in `val`.  Values from `val` take precedence.  If only two arguments are provided, merges `val` directly with `obj`. 
+- `merge(obj, [path,] val)` - merges all properties of item at `path` with those in `val`.  Values from `val` take precedence.  If only two arguments are provided, merges `val` directly with `obj`. 
 - `mergeDeep(obj, path, val)` - like `merge`, but using `setDeep`
 - `inc(obj, path, val = 1)` - increments the value at `path` by `val`, or sets it to `val` if it is null.  Throws if it is a non-numerical value.
 - `incDeep(obj, path, val = 1)` - like `inc`, but using `setDeep`
 - `toggle(obj, path)` - applies the `not` operator to the value at `path`.
 - `toggleDeep(obj, path, val = 1)` - like `toggle`, but using `setDeep`
+
+#### Array operations
 - `concat(obj, path, val)` - concats `val` to the end of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
 - `concatDeep(obj, path, val = 1)` - like `concat`, but using `setDeep`
 - `concatLeft(obj, path, val)` - concats `val` to the beginning of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
