@@ -1,6 +1,6 @@
 {
   "name": "ih",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Simple immutability helpers for javascript apps",
   "scripts": {
     "build": "rm -rf ./lib && mkdir lib && babel ./src/index.js -o ./lib/index.js",
