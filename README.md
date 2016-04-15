@@ -45,16 +45,16 @@ In all methods that follow, `obj` is the object to be operated on, and `path` is
 
 #### Transformations
 - `transform(obj, path, fn)` - `get`s the value at `path`, calls `fn` on that value, and `set`s the path to the returned value.
-- `transformDeep(obj, path, fn)` - like `transform`, but using `setDeep`
+- `transformDeep(obj, path, fn)` - like `transform`, but using `setDeep`.
 - `merge(obj, [path,] val)` - merges all properties of item at `path` with those in `val`.  Values from `val` take precedence.  If only two arguments are provided, merges `val` directly with `obj`. 
-- `mergeDeep(obj, path, val)` - like `merge`, but using `setDeep`
+- `mergeDeep(obj, path, val)` - like `merge`, but using `setDeep`.
 - `inc(obj, path, val = 1)` - increments the value at `path` by `val`, or sets it to `val` if it is null.  Throws if it is a non-numerical value.
-- `incDeep(obj, path, val = 1)` - like `inc`, but using `setDeep`
+- `incDeep(obj, path, val = 1)` - like `inc`, but using `setDeep`.
 - `toggle(obj, path)` - applies the `not` operator to the value at `path`.
-- `toggleDeep(obj, path, val = 1)` - like `toggle`, but using `setDeep`
+- `toggleDeep(obj, path, val = 1)` - like `toggle`, but using `setDeep`.
 
 #### Array operations
 - `concat(obj, path, val)` - concats `val` to the end of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
-- `concatDeep(obj, path, val = 1)` - like `concat`, but using `setDeep`
+- `concatDeep(obj, path, val = 1)` - like `concat`, but using `setDeep`.
 - `concatLeft(obj, path, val)` - concats `val` to the beginning of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
-- `concatLeftDeep(obj, path, val = 1)` - like `concatLeft`, but using `setDeep`
+- `concatLeftDeep(obj, path, val = 1)` - like `concatLeft`, but using `setDeep`.
