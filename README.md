@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/peterkhayes/ih.svg?branch=master)](https://travis-ci.org/classdojo/rolling-rate-limiter)  
+[![Build Status](https://travis-ci.org/peterkhayes/ih.svg?branch=master)](https://travis-ci.org/peterkhayes/ih)  
 # ih
 Simple immutability helpers for javascript apps.
 
