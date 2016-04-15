@@ -1,5 +1,5 @@
 # ih
-[![Build Status](https://travis-ci.org/classdojo/rolling-rate-limiter.svg?branch=master)](https://travis-ci.org/classdojo/rolling-rate-limiter)
+[![Build Status](https://travis-ci.org/classdojo/rolling-rate-limiter.svg?branch=master)](https://travis-ci.org/classdojo/rolling-rate-limiter)  
 Simple immutability helpers for javascript apps.
 
 ## Purpose
