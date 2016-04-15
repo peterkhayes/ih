@@ -4,6 +4,8 @@ Simple immutability helpers for javascript apps.
 ## Purpose
 Like using immutable data, but want to work with plain javascript objects?  Use this small set of helpers to manipulate objects in an immutable way.  Each method returns a new object, with the minimal set of changes required to complete the operation.
 
+ih is well-tested, 1.6kb when gzipped, and has no dependencies.  It's based on tools we've built for our React/Redux frontend app at ClassDojo.
+
 ## Usage
 ```js
 const ih = require("ih");
