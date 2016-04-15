@@ -11,7 +11,6 @@ ih is well-tested, 1.6kb when gzipped, and has no dependencies.  It's based on t
 const ih = require("ih");
 
 const obj = {
-  foo: "bar",
   a: {
     b: {
       c: 4
@@ -26,13 +25,15 @@ const obj = {
 const get1 = ih.get(obj, "a.b.c") // => 4
 const get2 = ih.get(obj, "a.b") // => {c: 4}
 
-const set1 = ih.set(obj, "a", 3) // => new obj with a = 3
+const set1 = ih.set(obj, "a", 3) // => new obj with a = 3.
 const set2 = ih.set(obj, "a.b.c", 5) // => new obj with a.b.c = 5.  obj.a and obj.a.b are both new objects.
 const set3 = ih.set(obj, "arr.0", {id: 3}) // => new obj with arr[0] = {id: 3}.  arr is a new array, second item is not.
-const set4 = ih.set(obj, "a.e.f", 4) // throws (use setDeep for this)
+const set4 = ih.set(obj, "a.e.f", 4) // throws - use setDeep for this.
+const set4 = ih.setDeep(obj, "a.e.f", 4) // => new obj with a and a.e both objects, and a.e.f == 4.
 
-const transformed = ih.transform(obj, "a.b.c", (x) => x - 1) // => new obj with a.b.c = 3
+const transformed = ih.transform(obj, "a.b.c", (x) => x - 1) // => new obj with a.b.c = 3.
 const concatted = ih.concat(obj, "arr", [{id: 3}]) // => new obj with a new array with an extra item at arr.
+const merged = ih.merge(obj, "a.b", {d: 3, e: 4}) // => new obj with a.b now having 3 keys.
 ```
 
 ## API
