@@ -4,7 +4,7 @@ const expect = require("expect");
 
 const obj = {
   a: 1,
-  b: 2,
+  b: false,
   c: {
     d: 3,
     e: {
@@ -230,8 +230,8 @@ describe("ih", () => {
 
     it("merges two objects at the root", () => {
       copy.a = 2;
-      copy.b = 3;
-      expect(ih.merge(obj, {a: 2, b: 3})).toEqual(copy);
+      copy.b = true;
+      expect(ih.merge(obj, {a: 2, b: true})).toEqual(copy);
     });
 
     it("merges a shorter array at the root", () => {
@@ -277,6 +277,84 @@ describe("ih", () => {
     it("sets a non-existant value", () => {
       copy.c.e.h = 2;
       expect(ih.inc(obj, "c.e.h", 2)).toEqual(copy);
+    });
+
+  });
+
+  describe("toggle", () => {
+
+    it("toggles a value to false", () => {
+      copy.c.d = false;
+      expect(ih.toggle(obj, "c.d")).toEqual(copy);
+    });
+
+    it("toggles a value to true", () => {
+      copy.b = true;
+      expect(ih.toggle(obj, "b")).toEqual(copy);
+    });
+
+  });
+
+  describe("concat", () => {
+
+    it("appends a value to the end of an array", () => {
+      copy.arr.push(1);
+      expect(ih.concat(obj, "arr", 1)).toEqual(copy);
+    });
+
+    it("appends several values to the end of an array", () => {
+      copy.arr.push(1, 2);
+      expect(ih.concat(obj, "arr", [1, 2])).toEqual(copy);
+    });
+
+    it("sets a null key to a one-value array", () => {
+      copy.arr2 = [1];
+      expect(ih.concat(obj, "arr2", 1)).toEqual(copy);
+    });
+
+    it("sets a null key to a multi-value array", () => {
+      copy.arr2 = [1, 2];
+      expect(ih.concat(obj, "arr2", [1, 2])).toEqual(copy);
+    });
+
+    it("throws if target is a primitive", () => {
+      expect(() => ih.concat(obj, "a", 1)).toThrow();
+    });
+
+    it("throws if target is an object", () => {
+      expect(() => ih.concat(obj, "c.e", 1)).toThrow();
+    });
+
+  });
+
+  describe("concatLeft", () => {
+
+    it("prepends a value to the beginning of an array", () => {
+      copy.arr.unshift(1);
+      expect(ih.concatLeft(obj, "arr", 1)).toEqual(copy);
+    });
+
+    it("prepends several values to the beginning of an array", () => {
+      copy.arr.unshift(1, 2);
+      expect(ih.concatLeft(obj, "arr", [1, 2])).toEqual(copy);
+    });
+
+    it("sets a null key to a one-value array", () => {
+      copy.arr2 = [1];
+      expect(ih.concatLeft(obj, "arr2", 1)).toEqual(copy);
+    });
+
+    it("sets a null key to a multi-value array", () => {
+      copy.arr2 = [1, 2];
+      expect(ih.concatLeft(obj, "arr2", [1, 2])).toEqual(copy);
+    });
+
+    it("throws if target is a primitive", () => {
+      expect(() => ih.concatLeft(obj, "a", 1)).toThrow();
+    });
+
+    it("throws if target is an object", () => {
+      expect(() => ih.concatLeft(obj, "c.e", 1)).toThrow();
     });
 
   });
