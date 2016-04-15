@@ -55,7 +55,7 @@ function without (obj, path) {
       delete newObj[headKey];
       return newObj;
     } else {
-      return { ...obj, [headKey]: without(obj, tailKeys) };
+      return { ...obj, [headKey]: without(obj[headKey], tailKeys) };
     }
   }
 }
@@ -73,7 +73,7 @@ function transformDeep (obj, path, fn) {
 
 function merge (obj, path, toMerge) {
   if (arguments.length === 2) {
-    return mergeOp(obj, path);
+    return mergeOp(path, obj);
   } else {
     return transform(obj, path, mergeOp.bind(null, toMerge));
   }
@@ -161,7 +161,20 @@ function setOp (obj, path, val, deep) {
 }
 
 function mergeOp (toMerge, existing = {}) {
-  return {...existing, ...toMerge};
+  const isArray = Array.isArray(toMerge);
+  if (typeof toMerge !== "object") {
+    throw new Error(`Can't merge a primitive: ${toMerge}`);
+  } else if (typeof existing !== "object") {
+    throw new Error(`Can't merge a primitive: ${existing}`);
+  } else if (isArray !== Array.isArray(existing)) {
+    throw new Error("Can't merge an array onto a non-array.");
+  } else if (!isArray) {
+    return {...existing, ...toMerge};
+  } else if (toMerge.length > existing.length) {
+    return toMerge;
+  } else {
+    return toMerge.concat(existing.slice(toMerge.length));
+  }
 }
 
 function toggleOp (val) {
@@ -169,7 +182,7 @@ function toggleOp (val) {
 }
 
 function incOp (amt = 1, existing) {
-  if (typeof amount !== "number") {
+  if (typeof amt !== "number") {
     throw new Error(`Attempted to increment by a non-numerical value: ${amt}`);
   } else if (existing == null) {
     return amt;
