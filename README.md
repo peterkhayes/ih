@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/peterkhayes/ih.svg?branch=master)](https://travis-ci.org/peterkhayes/ih)  
+[![Build Status](https://travis-ci.org/peterkhayes/ih.svg?branch=master)](https://travis-ci.org/peterkhayes/ih)[![Coverage Status](https://coveralls.io/repos/github/peterkhayes/ih/badge.svg?branch=master)](https://coveralls.io/github/peterkhayes/ih?branch=master)  
 # ih
 Simple immutability helpers for javascript apps.
 
