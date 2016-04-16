@@ -1,3 +1,4 @@
 src
+coverage
 npm-debug.log
 .travis.yml

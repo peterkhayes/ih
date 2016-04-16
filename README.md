@@ -3,9 +3,9 @@
 Simple immutability helpers for javascript apps.
 
 ## Purpose
-Like using immutable data, but want to work with plain javascript objects?  Use this small set of helpers to manipulate objects in an immutable way.  Each method returns a new object, with the minimal set of changes required to complete the operation.
+Like using immutable data, but want to work with plain javascript objects?  Use this small set of helpers to manipulate objects in an immutable way. Each method returns a new object, with the minimal set of changes required to complete the operation.
 
-ih is well-tested, 1.6kb when gzipped, and has no dependencies.  It's based on tools we've built for our React/Redux frontend app at ClassDojo.
+`ih` is well-tested, 1kb when minified and gzipped, and has no dependencies.  It's based on tools we've built for our React/Redux frontend app at ClassDojo.
 
 ## Usage
 ```js
@@ -35,6 +35,35 @@ const set4 = ih.setDeep(obj, "a.e.f", 4) // => new obj with a and a.e both objec
 const transformed = ih.transform(obj, "a.b.c", (x) => x - 1) // => new obj with a.b.c = 3.
 const concatted = ih.concat(obj, "arr", [{id: 3}]) // => new obj with a new array with an extra item at arr.
 const merged = ih.merge(obj, "a.b", {d: 3, e: 4}) // => new obj with a.b now having 3 keys.
+```
+
+## How it works
+Under the hood, `ih` is essentially a wrapper around Object.assign, making usage of this funcationality much more readable. For example,  
+```
+  ih.set(obj, "a.b.c", 3)
+```
+desugars to  
+```
+  Object.assign({}, obj, {
+    a: Object.assign({}, obj.a, {
+      b: Object.assign({}, obj.b, {
+        c: 3
+      });
+    });
+  });
+```
+or, with ES7 spread syntax  
+```
+  {
+    ...obj,
+    a: {
+      ...obj.a,
+      b: {
+        ...obj.b,
+        c: 3
+      }
+    }
+  }
 ```
 
 ## API
