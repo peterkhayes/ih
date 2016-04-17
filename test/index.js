@@ -1,4 +1,4 @@
-const ih = require("..");
+const ih = require("../src");
 const clone = require("clone");
 const expect = require("expect");
 

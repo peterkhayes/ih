@@ -6,8 +6,9 @@
     "build": "babel src -d lib",
     "test": "mocha",
     "lint": "eslint ./src",
-    "prepublish": "npm run lint && npm run build && npm run test",
-    "travis": "npm run prepublish && istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "coverage": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "prepublish": "npm run lint && npm run test && npm run build",
+    "travis": "npm run lint && npm run coverage"
   },
   "author": "",
   "license": "ISC",

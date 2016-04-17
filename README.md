@@ -7,7 +7,10 @@ Like using immutable data, but want to work with plain javascript objects?  Use 
 
 `ih` is well-tested, 1kb when minified and gzipped, and has no dependencies.  It's based on tools we've built for our React/Redux frontend app at ClassDojo.
 
-## Usage
+## Installation
+`npm install --save ih`
+
+## Usage 
 ```js
 const ih = require("ih");
 
@@ -37,13 +40,19 @@ const concatted = ih.concat(obj, "arr", [{id: 3}]) // => new obj with a new arra
 const merged = ih.merge(obj, "a.b", {d: 3, e: 4}) // => new obj with a.b now having 3 keys.
 ```
 
-## How it works
-Under the hood, `ih` is essentially a wrapper around Object.assign, making usage of this funcationality much more readable. For example,  
+You can also import individual operations.
+```js
+const inc = require("ih/lib/inc").inc;
+const incDeep = require("ih/lib/inc").incDeep;
 ```
+
+## How it works
+Under the hood, `ih` is essentially a wrapper around `Object.assign`, making its usage much more readable. For example,  
+```js
   ih.set(obj, "a.b.c", 3)
 ```
-desugars to  
-```
+desugars to:  
+```js
   Object.assign({}, obj, {
     a: Object.assign({}, obj.a, {
       b: Object.assign({}, obj.b, {
@@ -52,8 +61,8 @@ desugars to
     });
   });
 ```
-or, with ES7 spread syntax  
-```
+or, with ES7 spread syntax:  
+```js
   {
     ...obj,
     a: {
@@ -74,7 +83,7 @@ In all methods that follow, `obj` is the object to be operated on, and `path` is
 - `get(obj, path)` - returns the value at `path` within `obj`.
 - `set(obj, path, val)` - returns a copy of `obj`, with the value at `path` set to `val`.
 - `setDeep(obj, path, val)` - like `set`, but will recursively create objects to set a nested value.  
-- `without(obj, path)` - returns a copy of obj, with the key at `path` removed.
+- `without(obj, path)` - returns a copy of `obj` with the key at `path` removed.
 
 #### Transformations
 - `transform(obj, path, fn)` - `get`s the value at `path`, calls `fn` on that value, and `set`s the path to the returned value.
@@ -83,11 +92,11 @@ In all methods that follow, `obj` is the object to be operated on, and `path` is
 - `mergeDeep(obj, path, val)` - like `merge`, but using `setDeep`.
 - `inc(obj, path, val = 1)` - increments the value at `path` by `val`, or sets it to `val` if it is null.  Throws if it is a non-numerical value.
 - `incDeep(obj, path, val = 1)` - like `inc`, but using `setDeep`.
-- `toggle(obj, path)` - applies the `not` operator to the value at `path`.
+- `toggle(obj, path)` - applies the `!` operator to the value at `path`.
 - `toggleDeep(obj, path, val = 1)` - like `toggle`, but using `setDeep`.
 
 #### Array operations
 - `concat(obj, path, val)` - concats `val` to the end of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
 - `concatDeep(obj, path, val = 1)` - like `concat`, but using `setDeep`.
-- `concatLeft(obj, path, val)` - concats `val` to the beginning of the array at `path`, or sets `path` to `val` if there is nothing there.  Throws if a non-array value is there.
+- `concatLeft(obj, path, val)` - like `concat`, but puts `val` at the start of the array at `path`.
 - `concatLeftDeep(obj, path, val = 1)` - like `concatLeft`, but using `setDeep`.
